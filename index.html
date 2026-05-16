@@ -1,0 +1,2428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rakesh Roy — Python Backend Engineer</title>
+  <meta name="description" content="Rakesh Roy — Senior Python/Django Developer & Backend Engineer with 4.5 years building enterprise HRMS, scalable APIs, and cloud infrastructure." />
+  <meta name="keywords" content="Python Developer, Django, Backend Engineer, API Architect, AWS, Hyderabad, HRMS" />
+  <meta property="og:title" content="Rakesh Roy — Python Backend Engineer" />
+  <meta property="og:description" content="4.5 years building enterprise HRMS, scalable APIs, and cloud infrastructure." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+<style>
+/* ============================================================
+   ROOT & TOKENS
+   ============================================================ */
+:root {
+  --bg-base:       #020617;
+  --bg-mid:        #0F172A;
+  --bg-card:       #111827;
+  --bg-glass:      rgba(15,23,42,0.7);
+  --py-blue:       #38BDF8;
+  --py-violet:     #8B5CF6;
+  --py-cyan:       #22D3EE;
+  --py-emerald:    #10B981;
+  --py-amber:      #F59E0B;
+  --text-bright:   #F8FAFC;
+  --text-mid:      #CBD5E1;
+  --text-muted:    #64748B;
+  --border-dim:    rgba(56,189,248,0.12);
+  --border-glow:   rgba(56,189,248,0.4);
+  --glow-blue:     0 0 30px rgba(56,189,248,0.25), 0 0 60px rgba(56,189,248,0.1);
+  --glow-violet:   0 0 30px rgba(139,92,246,0.3), 0 0 60px rgba(139,92,246,0.1);
+  --glow-cyan:     0 0 30px rgba(34,211,238,0.25);
+  --font-body:     'Outfit', sans-serif;
+  --font-display:  'Sora', sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+  --radius-lg:     16px;
+  --radius-xl:     24px;
+  --transition:    0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-mid);
+  overflow-x: hidden;
+  cursor: none;
+}
+::selection { background: rgba(56,189,248,0.3); color: var(--text-bright); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--py-blue); border-radius: 2px; }
+
+/* ============================================================
+   CUSTOM CURSOR
+   ============================================================ */
+#cursor-dot {
+  position: fixed; width: 8px; height: 8px;
+  background: var(--py-cyan); border-radius: 50%;
+  pointer-events: none; z-index: 9999; transition: transform 0.1s;
+  mix-blend-mode: difference;
+}
+#cursor-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1.5px solid rgba(56,189,248,0.5); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transition: transform 0.15s, width 0.3s, height 0.3s, border-color 0.3s;
+}
+body:hover #cursor-ring { border-color: var(--py-blue); }
+
+/* ============================================================
+   MOUSE GLOW
+   ============================================================ */
+#mouse-glow {
+  position: fixed; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+  transform: translate(-50%,-50%); transition: opacity 0.3s;
+}
+
+/* ============================================================
+   ANIMATED CANVAS BACKGROUND
+   ============================================================ */
+#bg-canvas {
+  position: fixed; inset: 0; z-index: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   LOADER
+   ============================================================ */
+#loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--bg-base);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1.5rem;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+#loader.hidden { opacity: 0; visibility: hidden; }
+.loader-terminal {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+  color: var(--py-emerald);
+  width: min(520px, 90vw);
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: rgba(16,185,129,0.04);
+  backdrop-filter: blur(10px);
+}
+.loader-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--py-blue), var(--py-violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; text-align: center;
+}
+.loader-bar-wrap { width: 100%; height: 2px; background: rgba(56,189,248,0.1); border-radius: 1px; }
+.loader-bar { height: 100%; border-radius: 1px; background: linear-gradient(90deg, var(--py-blue), var(--py-violet)); width: 0%; transition: width 0.1s linear; }
+.boot-line { line-height: 1.9; }
+.boot-line span.ok { color: var(--py-cyan); }
+.boot-line span.dim { color: var(--text-muted); }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+nav.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 1rem 2rem;
+  background: rgba(2,6,23,0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-dim);
+  transition: all var(--transition);
+}
+nav.navbar.scrolled {
+  padding: 0.6rem 2rem;
+  background: rgba(2,6,23,0.9);
+  border-bottom-color: rgba(56,189,248,0.2);
+}
+.navbar-brand {
+  font-family: var(--font-mono);
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--py-blue) !important;
+  letter-spacing: -0.03em;
+}
+.navbar-brand .brace { color: var(--py-violet); }
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.82rem; font-weight: 500;
+  color: var(--text-muted) !important;
+  padding: 0.4rem 0.9rem !important;
+  border-radius: 8px;
+  transition: all var(--transition);
+  letter-spacing: 0.02em;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--py-blue) !important;
+  background: rgba(56,189,248,0.08);
+}
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 0.8rem; font-weight: 600;
+  padding: 0.45rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid var(--py-blue);
+  color: var(--py-blue);
+  background: transparent;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.nav-cta:hover {
+  background: var(--py-blue);
+  color: var(--bg-base);
+  box-shadow: var(--glow-blue);
+}
+.navbar-toggler {
+  border: 1px solid var(--border-glow);
+  padding: 0.3rem 0.6rem;
+}
+.navbar-toggler-icon { filter: invert(1); }
+
+/* ============================================================
+   SECTION BASE
+   ============================================================ */
+section {
+  position: relative; z-index: 1;
+  padding: 7rem 0;
+}
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--py-cyan);
+  margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.7rem;
+}
+.section-label::before {
+  content: ''; display: block; width: 2rem; height: 1px;
+  background: var(--py-cyan);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 800; line-height: 1.1;
+  color: var(--text-bright);
+  letter-spacing: -0.04em;
+}
+.section-title .accent {
+  background: linear-gradient(135deg, var(--py-blue), var(--py-violet));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   GLASS CARD
+   ============================================================ */
+.glass-card {
+  background: rgba(15,23,42,0.6);
+  backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition);
+  position: relative; overflow: hidden;
+}
+.glass-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(56,189,248,0.04), transparent 60%);
+  pointer-events: none;
+}
+.glass-card:hover {
+  border-color: rgba(56,189,248,0.3);
+  box-shadow: var(--glow-blue);
+  transform: translateY(-3px);
+}
+
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8rem 0 4rem;
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.82rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--py-emerald);
+  display: flex; align-items: center; gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+.hero-eyebrow .pulse-dot {
+  width: 8px; height: 8px;
+  background: var(--py-emerald); border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+}
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 800; line-height: 0.95;
+  letter-spacing: -0.05em;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+.hero-name .name-accent {
+  background: linear-gradient(135deg, var(--py-blue) 0%, var(--py-violet) 60%, var(--py-cyan) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-typed-wrap {
+  font-family: var(--font-mono);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 500;
+  color: var(--text-mid);
+  margin-bottom: 1.5rem;
+  height: 2.2rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.typed-prompt { color: var(--py-violet); }
+.typed-text { color: var(--py-blue); }
+.typed-cursor {
+  display: inline-block; width: 2px; height: 1.3em;
+  background: var(--py-cyan);
+  animation: blink 1s infinite;
+  vertical-align: middle; margin-left: 2px;
+}
+@keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+.hero-desc {
+  font-size: 1.05rem; line-height: 1.8;
+  color: var(--text-muted); max-width: 560px;
+  margin-bottom: 2.5rem;
+}
+.hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
+.btn-primary-glow {
+  font-family: var(--font-mono);
+  font-size: 0.88rem; font-weight: 600;
+  padding: 0.85rem 2rem;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--py-blue), var(--py-violet));
+  color: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: all var(--transition);
+  box-shadow: 0 4px 20px rgba(56,189,248,0.3);
+}
+.btn-primary-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(56,189,248,0.5);
+  color: white;
+}
+.btn-outline-glow {
+  font-family: var(--font-mono);
+  font-size: 0.88rem; font-weight: 600;
+  padding: 0.85rem 2rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-glow);
+  color: var(--text-mid);
+  background: transparent;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  transition: all var(--transition);
+}
+.btn-outline-glow:hover {
+  border-color: var(--py-blue);
+  color: var(--py-blue);
+  background: rgba(56,189,248,0.06);
+  transform: translateY(-2px);
+}
+.hero-socials { display: flex; gap: 1rem; margin-top: 2.5rem; }
+.social-icon-link {
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all var(--transition);
+}
+.social-icon-link:hover {
+  border-color: var(--py-blue);
+  color: var(--py-blue);
+  background: rgba(56,189,248,0.08);
+  box-shadow: var(--glow-blue);
+}
+
+/* HERO TERMINAL CARD */
+.hero-terminal {
+  background: #0D1117;
+  border: 1px solid rgba(56,189,248,0.2);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5), var(--glow-blue);
+  position: relative;
+}
+.term-header {
+  background: #161b22;
+  padding: 0.75rem 1rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(56,189,248,0.1);
+}
+.term-dot { width: 12px; height: 12px; border-radius: 50%; }
+.term-dot.red   { background: #FF5F57; }
+.term-dot.yellow{ background: #FFBD2E; }
+.term-dot.green { background: #28CA42; }
+.term-file {
+  margin-left: auto;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.term-body {
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.9;
+  min-height: 320px;
+}
+.term-line { display: flex; gap: 0.6rem; }
+.term-prompt { color: var(--py-violet); flex-shrink: 0; }
+.term-cmd  { color: var(--py-blue); }
+.term-out  { color: var(--py-emerald); padding-left: 1.2rem; }
+.term-comment { color: var(--text-muted); padding-left: 1.2rem; }
+.term-key { color: var(--py-cyan); }
+.term-val { color: var(--py-amber); }
+.term-str { color: var(--py-emerald); }
+
+/* Floating tech badges */
+.tech-badge-float {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.72rem; font-weight: 500;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  animation: float-badge 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+@keyframes float-badge {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-10px) rotate(1deg); }
+}
+
+/* ============================================================
+   ABOUT SECTION
+   ============================================================ */
+#about { background: linear-gradient(180deg, var(--bg-base) 0%, rgba(15,23,42,0.4) 100%); }
+.about-stat-card {
+  text-align: center; padding: 1.75rem 1.25rem;
+  border-radius: var(--radius-lg);
+}
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2.8rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--py-blue), var(--py-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.82rem; letter-spacing: 0.05em;
+  color: var(--text-muted); margin-top: 0.4rem;
+  text-transform: uppercase; font-weight: 500;
+}
+.about-philosophy {
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+}
+.philosophy-icon {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+.about-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem; font-weight: 500;
+  padding: 0.25rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(56,189,248,0.08);
+  border: 1px solid rgba(56,189,248,0.2);
+  color: var(--py-blue);
+  margin: 0.2rem;
+}
+
+/* ============================================================
+   SKILLS SECTION
+   ============================================================ */
+#skills { background: var(--bg-base); }
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.skill-panel {
+  padding: 1.75rem;
+  border-radius: var(--radius-lg);
+  position: relative; overflow: hidden;
+}
+.skill-panel-header {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.skill-panel-icon {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px; font-size: 1.1rem;
+}
+.skill-panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.82rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--text-mid);
+}
+.skill-tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem; font-weight: 500;
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  transition: all var(--transition);
+  cursor: default;
+}
+.skill-tag:hover { transform: scale(1.05); }
+
+/* ============================================================
+   EXPERIENCE SECTION
+   ============================================================ */
+#experience { background: linear-gradient(180deg, var(--bg-base) 0%, rgba(15,23,42,0.3) 100%); }
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--py-blue), var(--py-violet), transparent);
+}
+.timeline-item { position: relative; margin-bottom: 3rem; }
+.timeline-node {
+  position: absolute; left: -2.4rem; top: 0.5rem;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--py-blue);
+  background: var(--bg-base);
+  box-shadow: 0 0 12px rgba(56,189,248,0.5);
+  z-index: 1;
+}
+.timeline-node.active { background: var(--py-blue); }
+.exp-card { padding: 2rem; border-radius: var(--radius-lg); }
+.exp-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; font-weight: 500;
+  color: var(--py-emerald);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.exp-role {
+  font-family: var(--font-display);
+  font-size: 1.35rem; font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
+}
+.exp-company {
+  font-size: 0.9rem; color: var(--py-blue);
+  font-weight: 500; margin-bottom: 1.25rem;
+}
+.exp-bullets { list-style: none; padding: 0; }
+.exp-bullets li {
+  position: relative; padding-left: 1.3rem;
+  font-size: 0.9rem; color: var(--text-muted);
+  line-height: 1.7; margin-bottom: 0.5rem;
+}
+.exp-bullets li::before {
+  content: '▹'; position: absolute; left: 0;
+  color: var(--py-cyan); font-size: 0.85rem;
+}
+.exp-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.25rem; }
+.exp-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 5px;
+  background: rgba(56,189,248,0.08);
+  color: var(--py-blue);
+  border: 1px solid rgba(56,189,248,0.15);
+}
+
+/* ============================================================
+   PROJECTS SECTION
+   ============================================================ */
+#projects { background: var(--bg-base); }
+.project-card {
+  padding: 0; border-radius: var(--radius-xl);
+  overflow: hidden; height: 100%;
+  display: flex; flex-direction: column;
+  transition: all var(--transition);
+}
+.project-card:hover { transform: translateY(-6px); }
+.project-header {
+  padding: 1.75rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--border-dim);
+  position: relative;
+}
+.project-status {
+  position: absolute; top: 1.2rem; right: 1.2rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-mono); font-size: 0.68rem;
+  color: var(--py-emerald);
+}
+.project-status .status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--py-emerald);
+  animation: pulse-dot 2s infinite;
+}
+.project-icon-wrap {
+  width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 14px; font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.project-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--text-bright); margin-bottom: 0.5rem;
+}
+.project-type {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; color: var(--py-violet);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+.project-body { padding: 1.25rem 1.75rem; flex: 1; }
+.project-desc {
+  font-size: 0.88rem; color: var(--text-muted);
+  line-height: 1.7; margin-bottom: 1.25rem;
+}
+.project-metrics {
+  display: flex; gap: 1rem; flex-wrap: wrap;
+  padding: 0.75rem; border-radius: 8px;
+  background: rgba(56,189,248,0.04);
+  border: 1px solid var(--border-dim);
+  margin-bottom: 1.25rem;
+}
+.project-metric { text-align: center; flex: 1; min-width: 60px; }
+.metric-val {
+  font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700;
+  color: var(--py-blue);
+}
+.metric-key { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; }
+.project-footer { padding: 1.25rem 1.75rem; border-top: 1px solid var(--border-dim); }
+.project-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.stack-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 500;
+  padding: 0.2rem 0.55rem;
+  border-radius: 5px;
+  background: rgba(139,92,246,0.1);
+  color: var(--py-violet);
+  border: 1px solid rgba(139,92,246,0.2);
+}
+
+/* ============================================================
+   TERMINAL SECTION
+   ============================================================ */
+#terminal-section { background: linear-gradient(180deg, var(--bg-base) 0%, rgba(15,23,42,0.5) 100%); }
+.interactive-terminal {
+  background: #0D1117;
+  border: 1px solid rgba(56,189,248,0.25);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 32px 100px rgba(0,0,0,0.6), var(--glow-blue);
+  max-width: 800px; margin: 0 auto;
+}
+.iterm-header {
+  background: #161B22;
+  padding: 0.85rem 1.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  border-bottom: 1px solid rgba(56,189,248,0.12);
+}
+.iterm-title {
+  margin-left: 0.75rem;
+  font-family: var(--font-mono); font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.iterm-body {
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem; line-height: 1.8;
+  min-height: 320px; max-height: 480px;
+  overflow-y: auto;
+  color: var(--text-mid);
+}
+.iterm-output-line { margin: 0.1rem 0; word-break: break-word; }
+.iterm-input-row {
+  display: flex; align-items: center;
+  border-top: 1px solid rgba(56,189,248,0.12);
+  padding: 0.75rem 1.25rem;
+  gap: 0.5rem;
+}
+.iterm-ps1 { font-family: var(--font-mono); font-size: 0.85rem; color: var(--py-violet); white-space: nowrap; }
+#terminal-input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: var(--font-mono); font-size: 0.85rem;
+  color: var(--py-blue); caret-color: var(--py-cyan);
+}
+.cmd-hint {
+  font-family: var(--font-mono); font-size: 0.75rem;
+  color: var(--text-muted); text-align: center; margin-top: 1rem;
+}
+
+/* ============================================================
+   SERVICES SECTION
+   ============================================================ */
+#services { background: var(--bg-base); }
+.service-card {
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  height: 100%;
+  transition: all var(--transition);
+  position: relative; overflow: hidden;
+}
+.service-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(56,189,248,0.06), transparent 60%);
+  opacity: 0; transition: opacity var(--transition);
+  pointer-events: none;
+}
+.service-card:hover::after { opacity: 1; }
+.service-icon {
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 14px; font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  transition: all var(--transition);
+}
+.service-card:hover .service-icon { transform: scale(1.1); }
+.service-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--text-bright); margin-bottom: 0.75rem;
+}
+.service-desc {
+  font-size: 0.88rem; color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ============================================================
+   STATS SECTION
+   ============================================================ */
+#stats {
+  background: linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(17,24,39,0.8) 100%);
+  border-top: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-dim);
+}
+.stat-widget {
+  text-align: center; padding: 2rem 1.5rem;
+  border-radius: var(--radius-lg);
+  position: relative; overflow: hidden;
+}
+.stat-widget .big-number {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800; line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.stat-widget p {
+  font-size: 0.85rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+/* ============================================================
+   CONTACT SECTION
+   ============================================================ */
+#contact { background: var(--bg-base); }
+.contact-wrapper {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3rem; align-items: start;
+}
+@media(max-width:768px){ .contact-wrapper { grid-template-columns:1fr; } }
+.contact-info-block { padding: 2rem; border-radius: var(--radius-xl); }
+.contact-method {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1rem; border-radius: 10px;
+  border: 1px solid var(--border-dim);
+  margin-bottom: 0.75rem;
+  transition: all var(--transition);
+}
+.contact-method:hover {
+  border-color: rgba(56,189,248,0.3);
+  background: rgba(56,189,248,0.04);
+}
+.contact-method-icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 9px; font-size: 1rem;
+}
+.contact-method-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 0.15rem;
+}
+.contact-method-value {
+  font-size: 0.9rem; color: var(--text-bright);
+  font-weight: 500;
+}
+.api-form-card { padding: 2rem; border-radius: var(--radius-xl); }
+.form-label-api {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; color: var(--py-cyan);
+  text-transform: uppercase; letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+  display: block;
+}
+.form-control-api {
+  width: 100%;
+  background: rgba(15,23,42,0.8);
+  border: 1px solid var(--border-dim);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-bright);
+  transition: all var(--transition);
+  outline: none;
+  resize: none;
+}
+.form-control-api::placeholder { color: var(--text-muted); }
+.form-control-api:focus {
+  border-color: var(--py-blue);
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.1);
+  background: rgba(15,23,42,0.95);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 1px solid var(--border-dim);
+  padding: 2.5rem 0;
+  position: relative; z-index: 1;
+  background: rgba(2,6,23,0.95);
+}
+.footer-sig {
+  font-family: var(--font-mono);
+  font-size: 0.82rem; color: var(--text-muted);
+}
+.footer-sig .acc { color: var(--py-blue); }
+
+/* ============================================================
+   HERO GLOW ORBS
+   ============================================================ */
+.hero-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); pointer-events: none; z-index: 0;
+  animation: orb-drift 8s ease-in-out infinite alternate;
+}
+.hero-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+  top: -10%; right: -5%;
+  animation-delay: 0s;
+}
+.hero-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+  bottom: 0%; left: -5%;
+  animation-delay: 3s;
+}
+.hero-orb-3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%);
+  top: 40%; left: 30%;
+  animation-delay: 1.5s;
+}
+@keyframes orb-drift {
+  0%   { transform: translate(0,0) scale(1); }
+  100% { transform: translate(30px, 20px) scale(1.1); }
+}
+
+/* ============================================================
+   NEON BORDER PULSE
+   ============================================================ */
+@keyframes neon-pulse {
+  0%,100% { box-shadow: 0 0 8px rgba(56,189,248,0.2); }
+  50%      { box-shadow: 0 0 24px rgba(56,189,248,0.5), 0 0 48px rgba(56,189,248,0.15); }
+}
+.timeline-node.active { animation: neon-pulse 2.5s infinite; }
+
+/* ============================================================
+   FLOATING PYTHON LOGO WATERMARK
+   ============================================================ */
+.hero-watermark {
+  position: absolute; right: 2%; bottom: 8%;
+  font-size: clamp(6rem, 12vw, 10rem);
+  opacity: 0.03; pointer-events: none; z-index: 0;
+  animation: orb-drift 10s ease-in-out infinite alternate;
+  user-select: none;
+}
+
+/* ============================================================
+   CODE SNIPPET CARD — floating in hero
+   ============================================================ */
+.hero-code-snippet {
+  position: absolute;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  padding: 0.75rem 1rem;
+  background: rgba(13,17,23,0.85);
+  border: 1px solid rgba(56,189,248,0.15);
+  border-radius: 10px;
+  color: var(--text-muted);
+  backdrop-filter: blur(10px);
+  pointer-events: none; z-index: 1;
+  animation: float-badge 6s ease-in-out infinite;
+  display: none;
+}
+@media(min-width:1200px){ .hero-code-snippet { display: block; } }
+
+/* ============================================================
+   SKILL BAR (hidden — tags used instead — keeping for reference)
+   ============================================================ */
+
+/* ============================================================
+   MOBILE NAVBAR COLLAPSE STYLE
+   ============================================================ */
+@media(max-width:992px){
+  .navbar-collapse {
+    background: rgba(2,6,23,0.97);
+    border: 1px solid var(--border-dim);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+  .nav-link { padding: 0.6rem 1rem !important; border-radius: 8px; }
+  .nav-cta  { display: inline-block; margin-top: 0.5rem; text-align: center; width: 100%; }
+}
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+.sec-divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-dim), transparent);
+  margin: 0;
+}
+
+/* ============================================================
+   ANIMATED UNDERLINE LINKS
+   ============================================================ */
+.anim-link {
+  position: relative; text-decoration: none; color: var(--py-blue);
+}
+.anim-link::after {
+  content: ''; position: absolute; left: 0; bottom: -2px;
+  width: 0; height: 1px; background: var(--py-blue);
+  transition: width var(--transition);
+}
+.anim-link:hover::after { width: 100%; }
+
+/* ============================================================
+   SCROLL-TO-TOP BUTTON
+   ============================================================ */
+#scroll-top {
+  position: fixed; bottom: 2rem; right: 1.5rem;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  border: 1px solid var(--border-glow);
+  background: rgba(15,23,42,0.9);
+  backdrop-filter: blur(10px);
+  color: var(--py-blue);
+  font-size: 1rem; cursor: pointer; z-index: 800;
+  opacity: 0; visibility: hidden;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+#scroll-top.visible { opacity: 1; visibility: visible; }
+#scroll-top:hover {
+  background: var(--py-blue); color: var(--bg-base);
+  box-shadow: var(--glow-blue);
+}
+
+/* ============================================================
+   AVAILABILITY BADGE (hero)
+   ============================================================ */
+.avail-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(16,185,129,0.3);
+  background: rgba(16,185,129,0.07);
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: var(--py-emerald);
+  margin-bottom: 1.5rem;
+}
+
+/* ============================================================
+   METRICS ROW SEPARATOR
+   ============================================================ */
+.metrics-sep {
+  width: 1px; background: var(--border-dim); align-self: stretch;
+}
+
+/* ============================================================
+   CONTACT METHOD HOVER ARROW
+   ============================================================ */
+.contact-method::after {
+  content: '→';
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: color var(--transition), transform var(--transition);
+}
+.contact-method:hover::after {
+  color: var(--py-blue);
+  transform: translateX(4px);
+}
+
+.scroll-prog {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
+  height: 2px;
+  background: linear-gradient(90deg, var(--py-blue), var(--py-violet));
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.1s linear;
+}
+
+/* ============================================================
+   AOS OVERRIDE
+   ============================================================ */
+[data-aos] { will-change: transform, opacity; }
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media(max-width:992px){
+  .hero-terminal-col { display: none; }
+  #cursor-dot,#cursor-ring { display: none; }
+  body { cursor: auto; }
+}
+@media(max-width:576px){
+  .hero-buttons { flex-direction: column; }
+  .skills-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.gradient-blue   { background: linear-gradient(135deg,rgba(56,189,248,0.15),rgba(56,189,248,0.05)); border-color: rgba(56,189,248,0.2); }
+.gradient-violet { background: linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.05)); border-color: rgba(139,92,246,0.2); }
+.gradient-emerald{ background: linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05)); border-color: rgba(16,185,129,0.2); }
+.gradient-cyan   { background: linear-gradient(135deg,rgba(34,211,238,0.15),rgba(34,211,238,0.05)); border-color: rgba(34,211,238,0.2); }
+.gradient-amber  { background: linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05)); border-color: rgba(245,158,11,0.2); }
+
+.text-blue   { color: var(--py-blue)!important; }
+.text-violet { color: var(--py-violet)!important; }
+.text-cyan   { color: var(--py-cyan)!important; }
+.text-emerald{ color: var(--py-emerald)!important; }
+.text-amber  { color: var(--py-amber)!important; }
+.text-bright { color: var(--text-bright)!important; }
+
+.border-blue   { border-color: rgba(56,189,248,0.3)!important; }
+.border-violet { border-color: rgba(139,92,246,0.3)!important; }
+
+.mono { font-family: var(--font-mono)!important; }
+
+/* ============================================================
+   ANIMATED GRID BG OVERLAY
+   ============================================================ */
+.grid-overlay {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 40%, transparent 100%);
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="mouse-glow"></div>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-prog" id="scroll-prog"></div>
+
+<!-- GRID OVERLAY -->
+<div class="grid-overlay"></div>
+
+<!-- CANVAS BACKGROUND -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ==================== LOADER ==================== -->
+<div id="loader">
+  <div class="loader-title">rakesh_roy.portfolio</div>
+  <div class="loader-terminal" id="boot-terminal"></div>
+  <div style="width:min(400px,80vw)">
+    <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+  </div>
+  <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted)" id="loader-pct">0%</div>
+</div>
+
+<!-- ==================== NAVBAR ==================== -->
+<nav class="navbar navbar-expand-lg" id="navbar">
+  <div class="container-xl">
+    <a class="navbar-brand" href="#hero">
+      <span class="brace">{</span> rr.<span style="color:var(--py-cyan)">dev</span> <span class="brace">}</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end gap-2" id="navMenu">
+      <ul class="navbar-nav align-items-center gap-1 me-3">
+        <li class="nav-item"><a class="nav-link" href="#about">about</a></li>
+        <li class="nav-item"><a class="nav-link" href="#skills">skills</a></li>
+        <li class="nav-item"><a class="nav-link" href="#experience">experience</a></li>
+        <li class="nav-item"><a class="nav-link" href="#projects">projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="#terminal-section">terminal</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">contact</a></li>
+      </ul>
+      <a class="nav-cta" href="mailto:rakeshroy.dev@gmail.com">Hire Me</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section id="hero">
+  <!-- Ambient orbs -->
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-watermark">🐍</div>
+
+  <!-- Floating code snippets (desktop only) -->
+  <div class="hero-code-snippet" style="top:22%;right:2%;animation-delay:0.5s;">
+    <span style="color:var(--py-violet)">@api_view</span>(<span style="color:var(--py-amber)">'GET'</span>)<br>
+    <span style="color:var(--py-key,#38BDF8)">def</span> <span style="color:var(--py-emerald)">health_check</span>(req):<br>
+    &nbsp;&nbsp;<span style="color:var(--py-key,#38BDF8)">return</span> Response(<span style="color:var(--py-amber)">"OK"</span>)
+  </div>
+  <div class="hero-code-snippet" style="bottom:22%;right:3%;animation-delay:2s;">
+    <span style="color:var(--py-violet)">@shared_task</span><br>
+    <span style="color:var(--py-key,#38BDF8)">def</span> <span style="color:var(--py-emerald)">send_report</span>(user_id):<br>
+    &nbsp;&nbsp;generate_pdf(user_id)
+  </div>
+
+  <!-- Floating tech badges -->
+  <span class="tech-badge-float" style="top:18%;left:4%;border-color:rgba(56,189,248,0.3);color:var(--py-blue);background:rgba(56,189,248,0.07);animation-delay:0s;">🐍 Python</span>
+  <span class="tech-badge-float" style="top:35%;left:2%;border-color:rgba(139,92,246,0.3);color:var(--py-violet);background:rgba(139,92,246,0.07);animation-delay:0.8s;">⚡ Django</span>
+  <span class="tech-badge-float" style="top:65%;left:6%;border-color:rgba(34,211,238,0.3);color:var(--py-cyan);background:rgba(34,211,238,0.07);animation-delay:1.6s;">☁️ AWS</span>
+  <span class="tech-badge-float" style="top:80%;left:3%;border-color:rgba(16,185,129,0.3);color:var(--py-emerald);background:rgba(16,185,129,0.07);animation-delay:2.2s;">🤖 Rasa AI</span>
+  <span class="tech-badge-float" style="top:12%;right:5%;border-color:rgba(245,158,11,0.3);color:var(--py-amber);background:rgba(245,158,11,0.07);animation-delay:0.4s;">🐳 Docker</span>
+  <span class="tech-badge-float" style="top:28%;right:3%;border-color:rgba(56,189,248,0.3);color:var(--py-blue);background:rgba(56,189,248,0.07);animation-delay:1.2s;">⚙️ Celery</span>
+  <span class="tech-badge-float" style="top:75%;right:5%;border-color:rgba(139,92,246,0.3);color:var(--py-violet);background:rgba(139,92,246,0.07);animation-delay:1.8s;">🔴 Redis</span>
+
+  <div class="container-xl">
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-6">
+        <div class="hero-eyebrow" data-aos="fade-up">
+          <span class="pulse-dot"></span>
+          Available for opportunities
+        </div>
+        <h1 class="hero-name" data-aos="fade-up" data-aos-delay="80">
+          <span class="name-accent">Rakesh</span><br>Roy
+        </h1>
+        <div class="hero-typed-wrap" data-aos="fade-up" data-aos-delay="160">
+          <span class="typed-prompt">$</span>
+          <span class="typed-text" id="typed-text"></span>
+          <span class="typed-cursor"></span>
+        </div>
+        <p class="hero-desc" data-aos="fade-up" data-aos-delay="240">
+          Accomplished Python/Django Developer with <strong style="color:var(--text-bright)">4.5 years</strong> building enterprise-grade HRMS, scalable multi-tenant SaaS platforms, and AI-powered systems — serving <strong style="color:var(--text-bright)">5000+ users</strong> across 10+ organizations.
+        </p>
+        <div class="hero-buttons" data-aos="fade-up" data-aos-delay="300">
+          <a href="mailto:rakeshroy.dev@gmail.com" class="btn-primary-glow">
+            <i class="fa-solid fa-envelope"></i> Hire Me
+          </a>
+          <a href="#projects" class="btn-outline-glow">
+            <i class="fa-solid fa-layer-group"></i> View Work
+          </a>
+        </div>
+        <div class="hero-socials" data-aos="fade-up" data-aos-delay="360">
+          <a href="https://linkedin.com/in/rakeshroy-dev" class="social-icon-link" target="_blank" title="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+          <a href="mailto:rakeshroy.dev@gmail.com" class="social-icon-link" title="Email">
+            <i class="fa-solid fa-envelope"></i>
+          </a>
+          <a href="tel:+918919736316" class="social-icon-link" title="Phone">
+            <i class="fa-solid fa-phone"></i>
+          </a>
+          <a href="https://wa.me/918919736316" class="social-icon-link" title="WhatsApp" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-6 hero-terminal-col" data-aos="fade-left" data-aos-delay="200">
+        <div class="hero-terminal">
+          <div class="term-header">
+            <span class="term-dot red"></span>
+            <span class="term-dot yellow"></span>
+            <span class="term-dot green"></span>
+            <span class="term-file">~/rakesh_roy/portfolio.py</span>
+          </div>
+          <div class="term-body">
+            <div class="term-line"><span class="term-comment"># Python Developer — System Profile</span></div>
+            <div class="term-line" style="height:0.5rem"></div>
+            <div class="term-line"><span class="term-key">class</span> <span class="term-cmd">RakeshRoy</span><span style="color:var(--text-mid)">:</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">name</span>     = <span class="term-str">"Rakesh Roy"</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">role</span>     = <span class="term-str">"Python/Django Developer"</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">exp</span>      = <span class="term-val">4.5</span> <span class="term-comment"># years</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">users</span>    = <span class="term-val">5000</span><span style="color:var(--text-mid)">+</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">uptime</span>   = <span class="term-str">"99.9%"</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">location</span> = <span class="term-str">"Hyderabad, India"</span></div>
+            <div class="term-line" style="height:0.5rem"></div>
+            <div class="term-line" style="padding-left:1.2rem"><span class="term-key">stack</span> = <span style="color:var(--text-mid)">[</span></div>
+            <div class="term-line" style="padding-left:2.4rem"><span class="term-str">"Python"</span>, <span class="term-str">"Django"</span>, <span class="term-str">"DRF"</span>,</div>
+            <div class="term-line" style="padding-left:2.4rem"><span class="term-str">"AWS"</span>, <span class="term-str">"Docker"</span>, <span class="term-str">"Redis"</span>,</div>
+            <div class="term-line" style="padding-left:2.4rem"><span class="term-str">"Celery"</span>, <span class="term-str">"Rasa"</span>, <span class="term-str">"MySQL"</span>,</div>
+            <div class="term-line" style="padding-left:2.4rem"><span class="term-str">"WebSockets"</span>, <span class="term-str">"Streamlit"</span></div>
+            <div class="term-line" style="padding-left:1.2rem"><span style="color:var(--text-mid)">]</span></div>
+            <div class="term-line" style="height:0.5rem"></div>
+            <div class="term-line"><span class="term-cmd">dev</span> = <span class="term-cmd">RakeshRoy</span><span style="color:var(--text-mid)">()</span></div>
+            <div class="term-line"><span class="term-cmd">dev</span>.<span class="term-key">status</span><span style="color:var(--text-mid)">()</span></div>
+            <div class="term-line"><span class="term-out">✅  Ready to build great software.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ABOUT ==================== -->
+<section id="about">
+  <div class="container-xl">
+    <div class="row mb-5">
+      <div class="col-lg-6" data-aos="fade-up">
+        <div class="section-label">01 — System Overview</div>
+        <h2 class="section-title">About <span class="accent">Rakesh Roy</span></h2>
+      </div>
+      <div class="col-lg-6 d-flex align-items-end" data-aos="fade-up" data-aos-delay="100">
+        <p style="color:var(--text-muted);line-height:1.8;font-size:0.95rem;">
+          A backend-focused engineer who loves turning complex business logic into elegant, maintainable systems. Specialized in multi-tenant SaaS architecture, real-time infrastructure, and AI-powered automation at enterprise scale.
+        </p>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="row g-3 mb-5">
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card about-stat-card gradient-blue">
+          <div class="stat-number" data-count="4" data-suffix=".5yrs">0</div>
+          <div class="stat-label">Experience</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="80">
+        <div class="glass-card about-stat-card gradient-violet">
+          <div class="stat-number" data-count="5000" data-suffix="+">0</div>
+          <div class="stat-label">Users Served</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="160">
+        <div class="glass-card about-stat-card gradient-emerald">
+          <div class="stat-number" data-count="99" data-suffix=".9%">0</div>
+          <div class="stat-label">Uptime SLA</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="240">
+        <div class="glass-card about-stat-card gradient-cyan">
+          <div class="stat-number" data-count="10" data-suffix="+">0</div>
+          <div class="stat-label">Organizations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Philosophy cards -->
+    <div class="row g-3">
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card about-philosophy h-100">
+          <div class="philosophy-icon" style="background:rgba(56,189,248,0.1);">🏗️</div>
+          <h5 style="font-family:var(--font-display);font-weight:700;color:var(--text-bright);margin-bottom:0.6rem;">Architecture First</h5>
+          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;">Pioneered multi-tenant SaaS HRMS architecture with org-specific customization — achieving 95% client satisfaction across 10+ organizations.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="80">
+        <div class="glass-card about-philosophy h-100">
+          <div class="philosophy-icon" style="background:rgba(139,92,246,0.1);">⚡</div>
+          <h5 style="font-family:var(--font-display);font-weight:700;color:var(--text-bright);margin-bottom:0.6rem;">Performance Obsessed</h5>
+          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;">Optimized DB queries with Redis caching reducing response time by 45% and server load by 30%. CI/CD pipelines cutting deployment time by 60%.</p>
+        </div>
+      </div>
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="160">
+        <div class="glass-card about-philosophy h-100">
+          <div class="philosophy-icon" style="background:rgba(16,185,129,0.1);">🤖</div>
+          <h5 style="font-family:var(--font-display);font-weight:700;color:var(--text-bright);margin-bottom:0.6rem;">AI Integration</h5>
+          <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.7;">Built Rasa-powered AI chatbot handling 1000+ daily queries — reducing HR workload by 40% and ticket volume by 40%.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education + Certs -->
+    <div class="row g-3 mt-3">
+      <div class="col-md-6" data-aos="fade-up">
+        <div class="glass-card p-4">
+          <div class="section-label mb-3">Education</div>
+          <div style="display:flex;gap:1rem;align-items:flex-start;">
+            <div style="width:44px;height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(56,189,248,0.1);font-size:1.3rem;">🎓</div>
+            <div>
+              <div style="font-family:var(--font-display);font-weight:700;color:var(--text-bright);">M.Sc. Computer Science</div>
+              <div style="font-size:0.85rem;color:var(--py-blue);margin:0.2rem 0;">BBCIT, Hyderabad</div>
+              <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">Aug 2018 – Nov 2020</div>
+              <div style="margin-top:0.75rem;">
+                <span class="about-chip">Data Structures</span>
+                <span class="about-chip">AI/ML</span>
+                <span class="about-chip">Cloud Computing</span>
+                <span class="about-chip">Distributed Systems</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6" data-aos="fade-up" data-aos-delay="80">
+        <div class="glass-card p-4">
+          <div class="section-label mb-3">Awards & Certifications</div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="display:flex;gap:0.75rem;align-items:center;padding:0.75rem;border-radius:9px;border:1px solid rgba(245,158,11,0.15);background:rgba(245,158,11,0.04);">
+              <span style="font-size:1.3rem;">🏆</span>
+              <div>
+                <div style="font-size:0.88rem;font-weight:600;color:var(--text-bright);">Employee Excellence Award</div>
+                <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);">Medicover Hospitals — 2023</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:center;padding:0.75rem;border-radius:9px;border:1px solid rgba(139,92,246,0.15);background:rgba(139,92,246,0.04);">
+              <span style="font-size:1.3rem;">🤖</span>
+              <div>
+                <div style="font-size:0.88rem;font-weight:600;color:var(--text-bright);">Innovation Award — AI Chatbot</div>
+                <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);">Medicover Hospitals — 2023</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:0.75rem;align-items:center;padding:0.75rem;border-radius:9px;border:1px solid rgba(56,189,248,0.15);background:rgba(56,189,248,0.04);">
+              <span style="font-size:1.3rem;">☁️</span>
+              <div>
+                <div style="font-size:0.88rem;font-weight:600;color:var(--text-bright);">AWS Cloud Practitioner</div>
+                <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);">Self-Study | Python & Django certified</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SKILLS ==================== -->
+<section id="skills">
+  <div class="container-xl">
+    <div class="row mb-5" data-aos="fade-up">
+      <div class="col">
+        <div class="section-label">02 — Tech Stack Matrix</div>
+        <h2 class="section-title">Engineering <span class="accent">Capabilities</span></h2>
+      </div>
+    </div>
+    <div class="skills-grid">
+
+      <div class="glass-card skill-panel" data-aos="fade-up" data-aos-delay="0">
+        <div class="skill-panel-header">
+          <div class="skill-panel-icon" style="background:rgba(56,189,248,0.12);">🐍</div>
+          <span class="skill-panel-title">Backend & Languages</span>
+        </div>
+        <div class="skill-tag-cloud">
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">Python</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">Django</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">Django REST Framework</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">Django Channels</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">JavaScript</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">SQL</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">HTML5 / CSS3</span>
+        </div>
+      </div>
+
+      <div class="glass-card skill-panel" data-aos="fade-up" data-aos-delay="60">
+        <div class="skill-panel-header">
+          <div class="skill-panel-icon" style="background:rgba(139,92,246,0.12);">🗄️</div>
+          <span class="skill-panel-title">Databases & Cache</span>
+        </div>
+        <div class="skill-tag-cloud">
+          <span class="skill-tag" style="background:rgba(139,92,246,0.1);color:var(--py-violet);border:1px solid rgba(139,92,246,0.25);">MySQL</span>
+          <span class="skill-tag" style="background:rgba(139,92,246,0.1);color:var(--py-violet);border:1px solid rgba(139,92,246,0.25);">Redis</span>
+          <span class="skill-tag" style="background:rgba(139,92,246,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">AWS RDS</span>
+          <span class="skill-tag" style="background:rgba(139,92,246,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">ER Modeling</span>
+          <span class="skill-tag" style="background:rgba(139,92,246,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Query Optimization</span>
+          <span class="skill-tag" style="background:rgba(139,92,246,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Django ORM</span>
+        </div>
+      </div>
+
+      <div class="glass-card skill-panel" data-aos="fade-up" data-aos-delay="120">
+        <div class="skill-panel-header">
+          <div class="skill-panel-icon" style="background:rgba(16,185,129,0.12);">☁️</div>
+          <span class="skill-panel-title">Cloud & Infrastructure</span>
+        </div>
+        <div class="skill-tag-cloud">
+          <span class="skill-tag" style="background:rgba(16,185,129,0.1);color:var(--py-emerald);border:1px solid rgba(16,185,129,0.25);">AWS EC2</span>
+          <span class="skill-tag" style="background:rgba(16,185,129,0.1);color:var(--py-emerald);border:1px solid rgba(16,185,129,0.25);">AWS S3</span>
+          <span class="skill-tag" style="background:rgba(16,185,129,0.1);color:var(--py-emerald);border:1px solid rgba(16,185,129,0.25);">AWS IAM</span>
+          <span class="skill-tag" style="background:rgba(16,185,129,0.1);color:var(--py-emerald);border:1px solid rgba(16,185,129,0.25);">AWS RDS Multi-AZ</span>
+          <span class="skill-tag" style="background:rgba(16,185,129,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">DigitalOcean</span>
+          <span class="skill-tag" style="background:rgba(16,185,129,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">CloudFront</span>
+          <span class="skill-tag" style="background:rgba(16,185,129,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Auto Scaling</span>
+        </div>
+      </div>
+
+      <div class="glass-card skill-panel" data-aos="fade-up" data-aos-delay="180">
+        <div class="skill-panel-header">
+          <div class="skill-panel-icon" style="background:rgba(34,211,238,0.12);">🚀</div>
+          <span class="skill-panel-title">DevOps & Deployment</span>
+        </div>
+        <div class="skill-tag-cloud">
+          <span class="skill-tag" style="background:rgba(34,211,238,0.1);color:var(--py-cyan);border:1px solid rgba(34,211,238,0.25);">Docker</span>
+          <span class="skill-tag" style="background:rgba(34,211,238,0.1);color:var(--py-cyan);border:1px solid rgba(34,211,238,0.25);">CI/CD Pipelines</span>
+          <span class="skill-tag" style="background:rgba(34,211,238,0.1);color:var(--py-cyan);border:1px solid rgba(34,211,238,0.25);">Nginx</span>
+          <span class="skill-tag" style="background:rgba(34,211,238,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Gunicorn</span>
+          <span class="skill-tag" style="background:rgba(34,211,238,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Git</span>
+          <span class="skill-tag" style="background:rgba(34,211,238,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Linux Admin</span>
+          <span class="skill-tag" style="background:rgba(34,211,238,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Sentry</span>
+        </div>
+      </div>
+
+      <div class="glass-card skill-panel" data-aos="fade-up" data-aos-delay="240">
+        <div class="skill-panel-header">
+          <div class="skill-panel-icon" style="background:rgba(245,158,11,0.12);">⚙️</div>
+          <span class="skill-panel-title">Automation & Async</span>
+        </div>
+        <div class="skill-tag-cloud">
+          <span class="skill-tag" style="background:rgba(245,158,11,0.1);color:var(--py-amber);border:1px solid rgba(245,158,11,0.25);">Celery</span>
+          <span class="skill-tag" style="background:rgba(245,158,11,0.1);color:var(--py-amber);border:1px solid rgba(245,158,11,0.25);">WebSockets</span>
+          <span class="skill-tag" style="background:rgba(245,158,11,0.1);color:var(--py-amber);border:1px solid rgba(245,158,11,0.25);">Rasa AI</span>
+          <span class="skill-tag" style="background:rgba(245,158,11,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Streamlit</span>
+          <span class="skill-tag" style="background:rgba(245,158,11,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Pytest</span>
+          <span class="skill-tag" style="background:rgba(245,158,11,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Cron Jobs</span>
+        </div>
+      </div>
+
+      <div class="glass-card skill-panel" data-aos="fade-up" data-aos-delay="300">
+        <div class="skill-panel-header">
+          <div class="skill-panel-icon" style="background:rgba(56,189,248,0.12);">📊</div>
+          <span class="skill-panel-title">Data & Analytics</span>
+        </div>
+        <div class="skill-tag-cloud">
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">NumPy</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">Pandas</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.1);color:var(--py-blue);border:1px solid rgba(56,189,248,0.25);">Plotly</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Matplotlib</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Apache Superset</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Chart.js</span>
+          <span class="skill-tag" style="background:rgba(56,189,248,0.08);color:var(--text-mid);border:1px solid var(--border-dim);">Bokeh</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EXPERIENCE ==================== -->
+<section id="experience">
+  <div class="container-xl">
+    <div class="row mb-5" data-aos="fade-up">
+      <div class="col">
+        <div class="section-label">03 — Career Timeline Engine</div>
+        <h2 class="section-title">Professional <span class="accent">Experience</span></h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="timeline">
+
+          <!-- Job 1 -->
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-node active"></div>
+            <div class="glass-card exp-card">
+              <div class="exp-date">
+                <i class="fa-solid fa-circle-dot" style="color:var(--py-emerald);font-size:0.65rem;"></i>
+                Jul 2022 — Present &nbsp;•&nbsp; 3 yrs
+              </div>
+              <div class="exp-role">Python / Django Developer</div>
+              <div class="exp-company"><i class="fa-solid fa-building me-1"></i> Medicover Hospitals, Hyderabad</div>
+              <ul class="exp-bullets">
+                <li>Lead architecture and development of modular HRMS serving 10+ organizations with 5000+ users — covering recruitment, onboarding, attendance, leave, payroll, asset tracking, and performance management</li>
+                <li>Pioneered multi-tenant SaaS architecture with organization-specific customization, achieving 95% client satisfaction</li>
+                <li>Engineered Rasa-powered AI chatbot handling 1000+ daily queries, reducing HR workload by 40%</li>
+                <li>Built real-time analytics dashboards using Streamlit, Django, Plotly, and Chart.js for KPIs and predictive insights</li>
+                <li>Designed Celery-based automated reporting system processing 5000+ monthly reports with 99.8% delivery rate</li>
+                <li>Developed real-time communication via Django Channels/WebSockets supporting 1000+ concurrent connections</li>
+                <li>Managed AWS infrastructure (EC2, S3, RDS) with Docker and CI/CD pipelines — reducing deployment time by 60%</li>
+                <li>Integrated Payphi payment gateway processing $100K+ monthly transactions with PCI-DSS compliance</li>
+                <li>Optimized database queries with Redis caching — improving response time by 45%, reducing server load by 30%</li>
+                <li>Mentored junior developers — improving team velocity by 25% and reducing bug rate by 35%</li>
+              </ul>
+              <div class="exp-tags">
+                <span class="exp-tag">Python</span><span class="exp-tag">Django</span><span class="exp-tag">AWS</span>
+                <span class="exp-tag">Rasa AI</span><span class="exp-tag">Celery</span><span class="exp-tag">Redis</span>
+                <span class="exp-tag">WebSockets</span><span class="exp-tag">Docker</span><span class="exp-tag">Streamlit</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Job 2 -->
+          <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+            <div class="timeline-node"></div>
+            <div class="glass-card exp-card">
+              <div class="exp-date">
+                <i class="fa-solid fa-circle-dot" style="color:var(--text-muted);font-size:0.65rem;"></i>
+                Jul 2021 — Jun 2022 &nbsp;•&nbsp; 1 yr
+              </div>
+              <div class="exp-role">Software Associate</div>
+              <div class="exp-company"><i class="fa-solid fa-building me-1"></i> Medicover Hospitals, Hyderabad</div>
+              <ul class="exp-bullets">
+                <li>Developed foundational HRMS modules: biometric attendance, multi-level leave workflows, and statutory-compliant payroll (PF, ESI, TDS)</li>
+                <li>Designed RESTful APIs using Django REST Framework with Token, JWT, and OAuth authentication + Swagger docs</li>
+                <li>Created dynamic Django views with custom template tags/filters for multi-tenant UI customization</li>
+                <li>Managed DigitalOcean deployment: Linux admin, Nginx SSL/TLS, MySQL with replication, automated backups — achieving 99.5% uptime</li>
+                <li>Implemented automated testing with pytest — achieving 80% coverage and 40% reduction in regression bugs</li>
+                <li>Established Git workflow, conducted code reviews, participated in agile ceremonies</li>
+              </ul>
+              <div class="exp-tags">
+                <span class="exp-tag">Django REST</span><span class="exp-tag">JWT/OAuth</span><span class="exp-tag">DigitalOcean</span>
+                <span class="exp-tag">MySQL</span><span class="exp-tag">Nginx</span><span class="exp-tag">Pytest</span>
+                <span class="exp-tag">Swagger</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PROJECTS ==================== -->
+<section id="projects">
+  <div class="container-xl">
+    <div class="row mb-5" data-aos="fade-up">
+      <div class="col">
+        <div class="section-label">04 — Production Systems</div>
+        <h2 class="section-title">Engineering <span class="accent">Projects</span></h2>
+      </div>
+    </div>
+    <div class="row g-4">
+
+      <!-- Project 1 -->
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card project-card h-100">
+          <div class="project-header">
+            <div class="project-status"><span class="status-dot"></span> Live System</div>
+            <div class="project-icon-wrap" style="background:rgba(56,189,248,0.1);">🏢</div>
+            <div class="project-type">Enterprise SaaS · Multi-Tenant</div>
+            <div class="project-name">Enterprise Multi-Tenant HRMS</div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc">Full-stack HRMS powering recruitment, onboarding, biometric attendance, leave management, TDS-compliant payroll, asset tracking, and performance appraisals — architected as a scalable SaaS serving multiple organizations from a single platform.</div>
+            <div class="project-metrics">
+              <div class="project-metric"><div class="metric-val">5000+</div><div class="metric-key">Users</div></div>
+              <div class="project-metric"><div class="metric-val">10+</div><div class="metric-key">Orgs</div></div>
+              <div class="project-metric"><div class="metric-val">99.9%</div><div class="metric-key">Uptime</div></div>
+              <div class="project-metric"><div class="metric-val">95%</div><div class="metric-key">Satisfaction</div></div>
+            </div>
+            <ul style="list-style:none;padding:0;" class="exp-bullets">
+              <li>EC2 auto-scaling, S3 + CloudFront, RDS Multi-AZ deployment</li>
+              <li>Sub-2-second page loads with Redis caching</li>
+              <li>PCI-DSS compliant Payphi payment gateway ($100K+/mo)</li>
+            </ul>
+          </div>
+          <div class="project-footer">
+            <div class="project-stack">
+              <span class="stack-badge">Python</span><span class="stack-badge">Django</span>
+              <span class="stack-badge">AWS</span><span class="stack-badge">Celery</span>
+              <span class="stack-badge">Streamlit</span><span class="stack-badge">Redis</span>
+              <span class="stack-badge">MySQL</span><span class="stack-badge">Docker</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-card project-card h-100">
+          <div class="project-header">
+            <div class="project-status"><span class="status-dot"></span> Production</div>
+            <div class="project-icon-wrap" style="background:rgba(139,92,246,0.1);">🤖</div>
+            <div class="project-type">AI · Conversational · NLP</div>
+            <div class="project-name">AI Chatbot for HR</div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc">Rasa conversational AI framework integrated with HRMS for automated employee query handling. Configured intent recognition and dialogue flows for attendance, leave, and payroll inquiries — dramatically reducing HR team workload.</div>
+            <div class="project-metrics">
+              <div class="project-metric"><div class="metric-val">1000+</div><div class="metric-key">Daily Queries</div></div>
+              <div class="project-metric"><div class="metric-val">75%</div><div class="metric-key">Faster Resolution</div></div>
+              <div class="project-metric"><div class="metric-val">40%</div><div class="metric-key">Ticket Drop</div></div>
+            </div>
+            <ul style="list-style:none;padding:0;" class="exp-bullets">
+              <li>Intent recognition for attendance, leave & payroll queries</li>
+              <li>35% improvement in employee satisfaction scores</li>
+              <li>Seamless integration with existing Django HRMS APIs</li>
+            </ul>
+          </div>
+          <div class="project-footer">
+            <div class="project-stack">
+              <span class="stack-badge">Rasa</span><span class="stack-badge">Python</span>
+              <span class="stack-badge">Django</span><span class="stack-badge">NLP</span>
+              <span class="stack-badge">REST API</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 3 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card project-card h-100">
+          <div class="project-header">
+            <div class="project-status"><span class="status-dot"></span> Active</div>
+            <div class="project-icon-wrap" style="background:rgba(34,211,238,0.1);">💬</div>
+            <div class="project-type">Real-Time · WebSocket</div>
+            <div class="project-name">Live Chat & Notification System</div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc">Real-time chat and notification features using Django Channels and WebSockets, enabling instant messaging and live notifications for seamless internal team communication.</div>
+            <div class="project-metrics">
+              <div class="project-metric"><div class="metric-val">1000+</div><div class="metric-key">Concurrent</div></div>
+              <div class="project-metric"><div class="metric-val">99.9%</div><div class="metric-key">Uptime</div></div>
+            </div>
+          </div>
+          <div class="project-footer">
+            <div class="project-stack">
+              <span class="stack-badge">Django Channels</span><span class="stack-badge">WebSockets</span>
+              <span class="stack-badge">Redis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 4 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="80">
+        <div class="glass-card project-card h-100">
+          <div class="project-header">
+            <div class="project-status"><span class="status-dot"></span> Active</div>
+            <div class="project-icon-wrap" style="background:rgba(245,158,11,0.1);">⚙️</div>
+            <div class="project-type">Automation · Reporting</div>
+            <div class="project-name">Automated Reporting Engine</div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc">Celery-powered reporting system with flexible scheduling, dynamic PDF/Excel generation with custom templates, and robust error handling for guaranteed delivery of 5000+ monthly reports.</div>
+            <div class="project-metrics">
+              <div class="project-metric"><div class="metric-val">5000+</div><div class="metric-key">Monthly Reports</div></div>
+              <div class="project-metric"><div class="metric-val">99.8%</div><div class="metric-key">Delivery Rate</div></div>
+            </div>
+          </div>
+          <div class="project-footer">
+            <div class="project-stack">
+              <span class="stack-badge">Celery</span><span class="stack-badge">Python</span>
+              <span class="stack-badge">Django</span><span class="stack-badge">Redis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 5 -->
+      <div class="col-lg-4" data-aos="fade-up" data-aos-delay="160">
+        <div class="glass-card project-card h-100">
+          <div class="project-header">
+            <div class="project-status"><span class="status-dot" style="background:var(--py-amber);"></span> In Development</div>
+            <div class="project-icon-wrap" style="background:rgba(16,185,129,0.1);">🏫</div>
+            <div class="project-type">EdTech · Full-Stack</div>
+            <div class="project-name">School Management System</div>
+          </div>
+          <div class="project-body">
+            <div class="project-desc">End-to-end school management platform covering student admissions, academics, attendance, fee management with payment integration, timetable scheduling, and exam management with role-based access.</div>
+            <div class="project-metrics">
+              <div class="project-metric"><div class="metric-val">4</div><div class="metric-key">Roles</div></div>
+              <div class="project-metric"><div class="metric-val">2025</div><div class="metric-key">Active Dev</div></div>
+            </div>
+          </div>
+          <div class="project-footer">
+            <div class="project-stack">
+              <span class="stack-badge">Python</span><span class="stack-badge">Django</span>
+              <span class="stack-badge">MySQL</span><span class="stack-badge">SMS/Email</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TERMINAL ==================== -->
+<section id="terminal-section">
+  <div class="container-xl">
+    <div class="row mb-5" data-aos="fade-up">
+      <div class="col text-center">
+        <div class="section-label" style="justify-content:center;">05 — Interactive Shell</div>
+        <h2 class="section-title">Live <span class="accent">Terminal</span></h2>
+        <p style="color:var(--text-muted);margin-top:0.75rem;font-size:0.95rem;">Explore my profile through a live terminal interface</p>
+      </div>
+    </div>
+    <div data-aos="fade-up" data-aos-delay="100">
+      <div class="interactive-terminal">
+        <div class="iterm-header">
+          <span class="term-dot red"></span>
+          <span class="term-dot yellow"></span>
+          <span class="term-dot green"></span>
+          <span class="iterm-title">rakesh@portfolio:~$</span>
+        </div>
+        <div class="iterm-body" id="terminal-output">
+          <div class="iterm-output-line" style="color:var(--py-emerald);">Welcome to Rakesh Roy's Portfolio Terminal v1.0</div>
+          <div class="iterm-output-line" style="color:var(--text-muted);">Type <span style="color:var(--py-cyan)">help</span> to see available commands.</div>
+          <div class="iterm-output-line">&nbsp;</div>
+        </div>
+        <div class="iterm-input-row">
+          <span class="iterm-ps1">rakesh@portfolio:~$&nbsp;</span>
+          <input type="text" id="terminal-input" placeholder="type a command..." autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+      <p class="cmd-hint">Available: <code style="color:var(--py-cyan)">help</code> · <code style="color:var(--py-cyan)">skills</code> · <code style="color:var(--py-cyan)">projects</code> · <code style="color:var(--py-cyan)">experience</code> · <code style="color:var(--py-cyan)">contact</code> · <code style="color:var(--py-cyan)">whoami</code> · <code style="color:var(--py-cyan)">clear</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== SERVICES ==================== -->
+<section id="services">
+  <div class="container-xl">
+    <div class="row mb-5" data-aos="fade-up">
+      <div class="col">
+        <div class="section-label">06 — Engineering Solutions</div>
+        <h2 class="section-title">What I <span class="accent">Build</span></h2>
+      </div>
+    </div>
+    <div class="row g-3">
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card service-card">
+          <div class="service-icon" style="background:rgba(56,189,248,0.1);"><i class="fa-brands fa-python text-blue"></i></div>
+          <div class="service-name">Backend Development</div>
+          <div class="service-desc">Production-grade Python/Django applications with clean architecture, scalable patterns, and enterprise-level reliability.</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="60">
+        <div class="glass-card service-card">
+          <div class="service-icon" style="background:rgba(139,92,246,0.1);"><i class="fa-solid fa-code text-violet"></i></div>
+          <div class="service-name">REST API Development</div>
+          <div class="service-desc">Secure, well-documented RESTful APIs using Django REST Framework with JWT/OAuth authentication and Swagger docs.</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="120">
+        <div class="glass-card service-card">
+          <div class="service-icon" style="background:rgba(16,185,129,0.1);"><i class="fa-solid fa-building text-emerald"></i></div>
+          <div class="service-name">Enterprise HRMS Solutions</div>
+          <div class="service-desc">Multi-tenant SaaS HRMS platforms covering payroll, attendance, leave, recruitment, and performance management.</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="180">
+        <div class="glass-card service-card">
+          <div class="service-icon" style="background:rgba(245,158,11,0.1);"><i class="fa-solid fa-gears text-amber"></i></div>
+          <div class="service-name">Automation Systems</div>
+          <div class="service-desc">Celery-powered task queues, automated reporting pipelines, AI chatbots, and workflow automation reducing manual effort by 40%+.</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="240">
+        <div class="glass-card service-card">
+          <div class="service-icon" style="background:rgba(34,211,238,0.1);"><i class="fa-brands fa-aws text-cyan"></i></div>
+          <div class="service-name">Cloud Deployment</div>
+          <div class="service-desc">AWS infrastructure setup with EC2, S3, RDS, Docker, CI/CD pipelines and DevOps best practices for 99.9% uptime.</div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="glass-card service-card">
+          <div class="service-icon" style="background:rgba(56,189,248,0.1);"><i class="fa-solid fa-chart-line text-blue"></i></div>
+          <div class="service-name">Real-Time Analytics</div>
+          <div class="service-desc">Streamlit + Plotly dashboards, KPI tracking, payroll trends, and predictive insights for data-driven decision making.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== STATS ==================== -->
+<section id="stats">
+  <div class="container-xl">
+    <div class="row g-3">
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="stat-widget glass-card">
+          <div class="big-number text-blue" data-count="4">0</div>
+          <p>Years Experience</p>
+          <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--py-emerald);margin-top:0.3rem;">+6 months</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="80">
+        <div class="stat-widget glass-card">
+          <div class="big-number text-violet" data-count="5">0</div>
+          <p>Major Projects</p>
+          <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--py-emerald);margin-top:0.3rem;">Production live</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="160">
+        <div class="stat-widget glass-card">
+          <div class="big-number text-cyan" data-count="100" data-suffix="K+">0</div>
+          <p>Monthly Transactions</p>
+          <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--py-emerald);margin-top:0.3rem;">PCI-DSS compliant</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="240">
+        <div class="stat-widget glass-card">
+          <div class="big-number text-emerald" data-count="40" data-suffix="%">0</div>
+          <p>Workload Reduced</p>
+          <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--py-emerald);margin-top:0.3rem;">via AI automation</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CONTACT ==================== -->
+<section id="contact">
+  <div class="container-xl">
+    <div class="row mb-5" data-aos="fade-up">
+      <div class="col text-center">
+        <div class="section-label" style="justify-content:center;">09 — Connect API</div>
+        <h2 class="section-title">Get In <span class="accent">Touch</span></h2>
+        <p style="color:var(--text-muted);margin-top:0.75rem;max-width:500px;margin-inline:auto;font-size:0.95rem;">Open to senior backend roles, freelance projects, and exciting engineering collaborations.</p>
+      </div>
+    </div>
+    <div class="contact-wrapper">
+      <div data-aos="fade-up" data-aos-delay="0">
+        <div class="glass-card contact-info-block">
+          <div class="section-label mb-4" style="font-size:0.72rem;">Direct Channels</div>
+          <a href="mailto:rakeshroy.dev@gmail.com" class="contact-method text-decoration-none">
+            <div class="contact-method-icon" style="background:rgba(56,189,248,0.1);"><i class="fa-solid fa-envelope text-blue"></i></div>
+            <div>
+              <div class="contact-method-label">Email</div>
+              <div class="contact-method-value">rakeshroy.dev@gmail.com</div>
+            </div>
+          </a>
+          <a href="tel:+918919736316" class="contact-method text-decoration-none">
+            <div class="contact-method-icon" style="background:rgba(16,185,129,0.1);"><i class="fa-solid fa-phone text-emerald"></i></div>
+            <div>
+              <div class="contact-method-label">Phone</div>
+              <div class="contact-method-value">+91 8919 736 316</div>
+            </div>
+          </a>
+          <a href="https://wa.me/918919736316" class="contact-method text-decoration-none" target="_blank">
+            <div class="contact-method-icon" style="background:rgba(16,185,129,0.1);"><i class="fa-brands fa-whatsapp text-emerald"></i></div>
+            <div>
+              <div class="contact-method-label">WhatsApp</div>
+              <div class="contact-method-value">Message me directly</div>
+            </div>
+          </a>
+          <a href="https://linkedin.com/in/rakeshroy-dev" class="contact-method text-decoration-none" target="_blank">
+            <div class="contact-method-icon" style="background:rgba(56,189,248,0.1);"><i class="fa-brands fa-linkedin-in text-blue"></i></div>
+            <div>
+              <div class="contact-method-label">LinkedIn</div>
+              <div class="contact-method-value">linkedin.com/in/rakeshroy-dev</div>
+            </div>
+          </a>
+          <div style="margin-top:1.5rem;padding:1rem;border-radius:10px;background:rgba(56,189,248,0.05);border:1px solid rgba(56,189,248,0.15);">
+            <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);">📍 Location</div>
+            <div style="font-size:0.9rem;color:var(--text-bright);margin-top:0.2rem;">Hyderabad, Telangana, India</div>
+            <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--py-emerald);margin-top:0.3rem;">✅ Open to remote & hybrid roles</div>
+          </div>
+        </div>
+      </div>
+
+      <div data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-card api-form-card">
+          <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--text-muted);margin-bottom:1.25rem;padding:0.6rem 0.8rem;border-radius:7px;background:rgba(56,189,248,0.04);border:1px solid var(--border-dim);">
+            <span style="color:var(--py-violet)">POST</span> &nbsp;/api/contact/send-message
+          </div>
+          <div class="mb-3">
+            <label class="form-label-api">name <span style="color:var(--text-muted)">// string, required</span></label>
+            <input type="text" class="form-control-api" placeholder="Your full name" id="cf-name" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label-api">email <span style="color:var(--text-muted)">// string, required</span></label>
+            <input type="email" class="form-control-api" placeholder="your@email.com" id="cf-email" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label-api">subject <span style="color:var(--text-muted)">// string</span></label>
+            <input type="text" class="form-control-api" placeholder="Project inquiry / Job offer / Collaboration" id="cf-subject" />
+          </div>
+          <div class="mb-4">
+            <label class="form-label-api">message <span style="color:var(--text-muted)">// string, required</span></label>
+            <textarea class="form-control-api" rows="5" placeholder="Tell me about your project or opportunity..." id="cf-message"></textarea>
+          </div>
+          <button class="btn-primary-glow w-100" onclick="handleFormSubmit()" style="justify-content:center;">
+            <i class="fa-solid fa-paper-plane"></i> &nbsp;Send Request
+          </button>
+          <div id="form-msg" style="display:none;margin-top:0.75rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--py-emerald);text-align:center;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCROLL TO TOP -->
+<a href="#hero" id="scroll-top" title="Back to top"><i class="fa-solid fa-arrow-up"></i></a>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="container-xl">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+      <div class="footer-sig">
+        <span class="brace" style="color:var(--py-violet)">{</span> Built with ❤️ by <span class="acc">Rakesh Roy</span> <span class="brace" style="color:var(--py-violet)">}</span>
+        &nbsp;·&nbsp; Python/Django Backend Engineer
+      </div>
+      <div class="d-flex gap-3">
+        <a href="https://linkedin.com/in/rakeshroy-dev" class="social-icon-link" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="mailto:rakeshroy.dev@gmail.com" class="social-icon-link"><i class="fa-solid fa-envelope"></i></a>
+        <a href="https://wa.me/918919736316" class="social-icon-link" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+      <div class="footer-sig" style="color:var(--text-muted);">
+        <span style="color:var(--py-emerald)">●</span> &nbsp;Available for opportunities
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+<script>
+/* ============================================================
+   CANVAS BACKGROUND — Particle Network
+   ============================================================ */
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [], animId;
+  const COLORS = ['rgba(56,189,248,', 'rgba(139,92,246,', 'rgba(34,211,238,', 'rgba(16,185,129,'];
+
+  function resize(){
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function makeParticle(){
+    const col = COLORS[Math.floor(Math.random()*COLORS.length)];
+    return {
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.35,
+      vy: (Math.random()-0.5)*0.35,
+      r: Math.random()*1.8+0.4,
+      col, opacity: Math.random()*0.5+0.1,
+    };
+  }
+
+  function init(){
+    resize();
+    const count = Math.min(120, Math.floor(W*H/12000));
+    particles = Array.from({length:count}, makeParticle);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(56,189,248,0.03)';
+    ctx.lineWidth = 1;
+    for(let x=0;x<W;x+=60){ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
+    for(let y=0;y<H;y+=60){ ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke(); }
+
+    // Connections
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const p=particles[i], q=particles[j];
+        const dx=p.x-q.x, dy=p.y-q.y;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        if(dist<140){
+          ctx.strokeStyle = `rgba(56,189,248,${0.08*(1-dist/140)})`;
+          ctx.lineWidth=0.6;
+          ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke();
+        }
+      }
+    }
+
+    // Particles
+    for(const p of particles){
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = p.col+p.opacity+')';
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+    }
+    animId = requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', ()=>{ resize(); });
+  init(); draw();
+})();
+
+/* ============================================================
+   CURSOR
+   ============================================================ */
+(function(){
+  const dot  = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  const glow = document.getElementById('mouse-glow');
+  let mx=0,my=0, rx=0,ry=0;
+  document.addEventListener('mousemove', e=>{
+    mx=e.clientX; my=e.clientY;
+    dot.style.left  = mx-4+'px';
+    dot.style.top   = my-4+'px';
+    glow.style.left = mx+'px';
+    glow.style.top  = my+'px';
+  });
+  (function lerp(){
+    rx += (mx-rx)*0.12;
+    ry += (my-ry)*0.12;
+    ring.style.left = rx-18+'px';
+    ring.style.top  = ry-18+'px';
+    requestAnimationFrame(lerp);
+  })();
+  document.querySelectorAll('a,button,.glass-card,.service-card,.project-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{
+      ring.style.width='52px'; ring.style.height='52px';
+      ring.style.borderColor='var(--py-blue)';
+    });
+    el.addEventListener('mouseleave',()=>{
+      ring.style.width='36px'; ring.style.height='36px';
+      ring.style.borderColor='rgba(56,189,248,0.5)';
+    });
+  });
+})();
+
+/* ============================================================
+   LOADER / BOOT SEQUENCE
+   ============================================================ */
+(function(){
+  const term = document.getElementById('boot-terminal');
+  const bar  = document.getElementById('loader-bar');
+  const pct  = document.getElementById('loader-pct');
+  const lines = [
+    {t:0,   html:'<span class="boot-line"><span class="dim">$</span> Initializing Portfolio...</span>'},
+    {t:400, html:'<span class="boot-line"><span class="ok">✔</span> Loading Backend Services... <span class="dim">done</span></span>'},
+    {t:800, html:'<span class="boot-line"><span class="ok">✔</span> Connecting AWS Infrastructure... <span class="dim">ok</span></span>'},
+    {t:1100,html:'<span class="boot-line"><span class="ok">✔</span> Fetching Projects (5)... <span class="dim">loaded</span></span>'},
+    {t:1400,html:'<span class="boot-line"><span class="ok">✔</span> APIs Authenticated... <span class="dim">JWT active</span></span>'},
+    {t:1700,html:'<span class="boot-line"><span class="ok">✔</span> Django 4.x running... <span class="dim">status 200</span></span>'},
+    {t:2000,html:'<span class="boot-line"><span class="ok">✔</span> Redis Cache warm... <span class="dim">45% faster</span></span>'},
+    {t:2300,html:'<span class="boot-line" style="color:var(--py-blue)">🚀 Welcome, Recruiter. Portfolio ready.</span>'},
+  ];
+  let prog=0;
+  const iv = setInterval(()=>{
+    prog=Math.min(prog+2,100);
+    bar.style.width=prog+'%';
+    pct.textContent=prog+'%';
+    if(prog>=100) clearInterval(iv);
+  },30);
+  lines.forEach(({t,html})=>{
+    setTimeout(()=>{
+      const div=document.createElement('div'); div.innerHTML=html;
+      term.appendChild(div);
+    },t);
+  });
+  setTimeout(()=>{
+    document.getElementById('loader').classList.add('hidden');
+    AOS.init({ once:true, duration:700, offset:60, easing:'ease-out-cubic' });
+  }, 2700);
+})();
+
+/* ============================================================
+   NAVBAR SCROLL
+   ============================================================ */
+(function(){
+  const nav  = document.getElementById('navbar');
+  const prog = document.getElementById('scroll-prog');
+  window.addEventListener('scroll',()=>{
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y>60);
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.transform = `scaleX(${y/h})`;
+  });
+})();
+
+/* ============================================================
+   TYPED TEXT EFFECT
+   ============================================================ */
+(function(){
+  const el = document.getElementById('typed-text');
+  const words = [
+    'Python Developer',
+    'Backend Engineer',
+    'API Architect',
+    'Automation Specialist',
+    'Cloud Engineer',
+    'SaaS Builder',
+  ];
+  let wi=0, ci=0, deleting=false;
+  function tick(){
+    const word = words[wi];
+    if(!deleting){
+      el.textContent = word.slice(0,ci+1);
+      ci++;
+      if(ci===word.length){ setTimeout(()=>{deleting=true;tick();},1800); return; }
+      setTimeout(tick, 80);
+    } else {
+      el.textContent = word.slice(0,ci-1);
+      ci--;
+      if(ci===0){ deleting=false; wi=(wi+1)%words.length; }
+      setTimeout(tick, 45);
+    }
+  }
+  setTimeout(tick, 1200);
+})();
+
+/* ============================================================
+   COUNTER ANIMATION
+   ============================================================ */
+function animateCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target = parseInt(el.dataset.count);
+    const suffix = el.dataset.suffix || '';
+    let current  = 0;
+    const step   = Math.ceil(target/60);
+    const iv = setInterval(()=>{
+      current = Math.min(current+step, target);
+      el.textContent = current + (current===target ? suffix : '');
+      if(current>=target) clearInterval(iv);
+    },20);
+  });
+}
+const counterObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ animateCounters(); counterObs.disconnect(); } });
+},{threshold:0.3});
+const firstCounter = document.querySelector('[data-count]');
+if(firstCounter) counterObs.observe(firstCounter);
+
+/* ============================================================
+   INTERACTIVE TERMINAL
+   ============================================================ */
+(function(){
+  const output = document.getElementById('terminal-output');
+  const input  = document.getElementById('terminal-input');
+  const history = [];
+  let histIdx = -1;
+
+  const COMMANDS = {
+    help(){
+      return [
+        '<span style="color:var(--py-cyan)">Available Commands:</span>',
+        '  <span style="color:var(--py-blue)">whoami</span>      — System profile summary',
+        '  <span style="color:var(--py-blue)">skills</span>      — Tech stack overview',
+        '  <span style="color:var(--py-blue)">projects</span>    — Production project list',
+        '  <span style="color:var(--py-blue)">experience</span>  — Career timeline',
+        '  <span style="color:var(--py-blue)">contact</span>     — Contact information',
+        '  <span style="color:var(--py-blue)">stats</span>       — Key metrics',
+        '  <span style="color:var(--py-blue)">clear</span>       — Clear terminal',
+      ];
+    },
+    whoami(){
+      return [
+        '<span style="color:var(--py-emerald)">┌─ Rakesh Roy ─────────────────────────────┐</span>',
+        '  Role     : Python/Django Developer',
+        '  Exp      : 4.5 years',
+        '  Company  : Medicover Hospitals, Hyderabad',
+        '  Focus    : Backend, SaaS, Cloud, AI',
+        '  Users    : 5000+ served',
+        '  Uptime   : 99.9% SLA',
+        '  Email    : <span style="color:var(--py-blue)">rakeshroy.dev@gmail.com</span>',
+        '<span style="color:var(--py-emerald)">└──────────────────────────────────────────┘</span>',
+      ];
+    },
+    skills(){
+      return [
+        '<span style="color:var(--py-cyan)">── Tech Stack ───────────────────────────────</span>',
+        '  <span style="color:var(--py-blue)">Backend</span>    Python, Django, DRF, Django Channels',
+        '  <span style="color:var(--py-violet)">Database</span>   MySQL, Redis, AWS RDS',
+        '  <span style="color:var(--py-emerald)">Cloud</span>      AWS (EC2, S3, IAM, RDS), DigitalOcean',
+        '  <span style="color:var(--py-cyan)">DevOps</span>     Docker, Nginx, Gunicorn, CI/CD, Git',
+        '  <span style="color:var(--py-amber)">Async</span>      Celery, WebSockets, Rasa AI, Streamlit',
+        '  <span style="color:var(--py-blue)">Data</span>       NumPy, Pandas, Plotly, Chart.js, Bokeh',
+        '  <span style="color:var(--py-violet)">Auth</span>       JWT, OAuth, Token, Swagger',
+        '<span style="color:var(--py-cyan)">─────────────────────────────────────────────</span>',
+      ];
+    },
+    projects(){
+      return [
+        '<span style="color:var(--py-cyan)">── Production Systems ───────────────────────</span>',
+        '  <span style="color:var(--py-blue)">1.</span> Enterprise Multi-Tenant HRMS   <span style="color:var(--py-emerald)">● LIVE</span>',
+        '     Python · Django · AWS · Celery · Redis',
+        '  <span style="color:var(--py-blue)">2.</span> AI Chatbot for HR (Rasa)       <span style="color:var(--py-emerald)">● LIVE</span>',
+        '     1000+ daily queries · 75% faster resolution',
+        '  <span style="color:var(--py-blue)">3.</span> Live Chat & Notification System <span style="color:var(--py-emerald)">● LIVE</span>',
+        '     Django Channels · WebSockets · 1000+ concurrent',
+        '  <span style="color:var(--py-blue)">4.</span> Automated Reporting Engine     <span style="color:var(--py-emerald)">● LIVE</span>',
+        '     5000+ reports/month · 99.8% delivery',
+        '  <span style="color:var(--py-blue)">5.</span> School Management System       <span style="color:var(--py-amber)">● DEV</span>',
+        '     End-to-end EdTech platform',
+        '<span style="color:var(--py-cyan)">─────────────────────────────────────────────</span>',
+      ];
+    },
+    experience(){
+      return [
+        '<span style="color:var(--py-cyan)">── Career Timeline ──────────────────────────</span>',
+        '  <span style="color:var(--py-emerald)">2022–Present</span> Python/Django Developer',
+        '               Medicover Hospitals, Hyderabad',
+        '               ↳ HRMS · Rasa AI · AWS · Celery',
+        '',
+        '  <span style="color:var(--text-muted)">2021–2022</span>    Software Associate',
+        '               Medicover Hospitals, Hyderabad',
+        '               ↳ DRF APIs · JWT/OAuth · DigitalOcean',
+        '',
+        '  <span style="color:var(--py-violet)">Awards</span>: Employee Excellence 2023',
+        '           Innovation Award — AI Chatbot 2023',
+        '<span style="color:var(--py-cyan)">─────────────────────────────────────────────</span>',
+      ];
+    },
+    contact(){
+      return [
+        '<span style="color:var(--py-cyan)">── Contact Information ──────────────────────</span>',
+        '  <span style="color:var(--py-blue)">Email</span>    rakeshroy.dev@gmail.com',
+        '  <span style="color:var(--py-blue)">Phone</span>    +91 8919 736 316',
+        '  <span style="color:var(--py-blue)">LinkedIn</span> linkedin.com/in/rakeshroy-dev',
+        '  <span style="color:var(--py-blue)">Location</span> Hyderabad, Telangana, India',
+        '  <span style="color:var(--py-emerald)">Status</span>   Open to remote & hybrid roles',
+        '<span style="color:var(--py-cyan)">─────────────────────────────────────────────</span>',
+      ];
+    },
+    stats(){
+      return [
+        '<span style="color:var(--py-cyan)">── Key Metrics ──────────────────────────────</span>',
+        '  Experience   : 4.5 years',
+        '  Users Served : 5000+',
+        '  Organizations: 10+',
+        '  Uptime SLA   : 99.9%',
+        '  AI Queries   : 1000+/day',
+        '  Reports/Month: 5000+',
+        '  Txn Volume   : $100K+/month',
+        '  HR Workload↓ : 40%',
+        '  Deploy Time↓ : 60%',
+        '  Response↓    : 45% faster',
+        '<span style="color:var(--py-cyan)">─────────────────────────────────────────────</span>',
+      ];
+    },
+  };
+
+  function println(html){
+    const d = document.createElement('div');
+    d.className = 'iterm-output-line';
+    d.innerHTML = html;
+    output.appendChild(d);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function run(cmd){
+    println(`<span style="color:var(--py-violet)">rakesh@portfolio:~$</span> <span style="color:var(--py-blue)">${cmd}</span>`);
+    const fn = COMMANDS[cmd.toLowerCase().trim()];
+    if(cmd.trim()==='') return;
+    if(cmd.trim()==='clear'){
+      output.innerHTML=''; return;
+    }
+    if(fn){
+      fn().forEach(l=>println(l));
+    } else {
+      println(`<span style="color:#f87171">command not found: ${cmd}</span> — type <span style="color:var(--py-cyan)">help</span>`);
+    }
+    println('');
+  }
+
+  input.addEventListener('keydown', e=>{
+    if(e.key==='Enter'){
+      const cmd = input.value.trim();
+      history.unshift(cmd); histIdx=-1;
+      run(cmd); input.value='';
+    } else if(e.key==='ArrowUp'){
+      histIdx=Math.min(histIdx+1,history.length-1);
+      input.value=history[histIdx]||'';
+    } else if(e.key==='ArrowDown'){
+      histIdx=Math.max(histIdx-1,-1);
+      input.value=histIdx<0?'':history[histIdx];
+    }
+  });
+
+  // Click-anywhere-in-terminal to focus
+  document.querySelector('.interactive-terminal').addEventListener('click',()=>input.focus());
+})();
+
+/* ============================================================
+   FORM SUBMIT
+   ============================================================ */
+function handleFormSubmit(){
+  const name    = document.getElementById('cf-name').value.trim();
+  const email   = document.getElementById('cf-email').value.trim();
+  const message = document.getElementById('cf-message').value.trim();
+  const msg     = document.getElementById('form-msg');
+  if(!name||!email||!message){
+    msg.style.display='block';
+    msg.style.color='#f87171';
+    msg.textContent='// Error 400: name, email & message are required';
+    return;
+  }
+  msg.style.display='block';
+  msg.style.color='var(--py-emerald)';
+  msg.textContent='// 200 OK — Message delivered! Rakesh will reply shortly.';
+  document.getElementById('cf-name').value='';
+  document.getElementById('cf-email').value='';
+  document.getElementById('cf-subject').value='';
+  document.getElementById('cf-message').value='';
+}
+
+/* ============================================================
+   SMOOTH ACTIVE NAV
+   ============================================================ */
+(function(){
+  const sections = document.querySelectorAll('section[id]');
+  const links    = document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll',()=>{
+    let cur='';
+    sections.forEach(s=>{ if(window.scrollY>=s.offsetTop-200) cur=s.id; });
+    links.forEach(l=>{
+      l.classList.toggle('active', l.getAttribute('href')==='#'+cur);
+    });
+  });
+})();
+
+/* ============================================================
+   VANILLA TILT — 3D hover on project & service cards
+   ============================================================ */
+function initTilt(){
+  VanillaTilt.init(document.querySelectorAll('.project-card, .service-card, .about-stat-card, .stat-widget'), {
+    max: 8, speed: 600, glare: true, 'max-glare': 0.12,
+    perspective: 900, scale: 1.02,
+  });
+}
+
+/* ============================================================
+   GLOW TRAIL EFFECT
+   ============================================================ */
+(function(){
+  const trail = [];
+  const MAX   = 12;
+  document.addEventListener('mousemove', e=>{
+    const dot = document.createElement('div');
+    Object.assign(dot.style, {
+      position:'fixed', width:'5px', height:'5px',
+      borderRadius:'50%', pointerEvents:'none', zIndex:'9997',
+      left: e.clientX-2.5+'px', top: e.clientY-2.5+'px',
+      background:'rgba(56,189,248,0.5)',
+      transition:'opacity 0.6s, transform 0.6s',
+      transform:'scale(1)',
+    });
+    document.body.appendChild(dot);
+    trail.push(dot);
+    if(trail.length>MAX){ const old=trail.shift(); old.remove(); }
+    requestAnimationFrame(()=>{
+      dot.style.opacity='0';
+      dot.style.transform='scale(0)';
+    });
+    setTimeout(()=>dot.remove(), 600);
+  });
+})();
+
+/* ============================================================
+   SECTION HIGHLIGHT LINE — top-border glow on scroll
+   ============================================================ */
+(function(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      e.target.style.transition='border-color 0.5s';
+    });
+  },{threshold:0.15});
+  document.querySelectorAll('.glass-card').forEach(c=>obs.observe(c));
+})();
+
+/* ============================================================
+   INIT AFTER LOADER
+   ============================================================ */
+// AOS + VanillaTilt are initialised inside the loader callback above.
+setTimeout(initTilt, 2800);
+
+/* ============================================================
+   SCROLL TO TOP
+   ============================================================ */
+(function(){
+  const btn = document.getElementById('scroll-top');
+  window.addEventListener('scroll', ()=>{
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+})();
+
+/* ============================================================
+   SMOOTH NAV LINK SCROLL (close mobile menu on click)
+   ============================================================ */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const href = a.getAttribute('href');
+    const target = document.querySelector(href);
+    if(target && href !== '#'){
+      e.preventDefault();
+      target.scrollIntoView({behavior:'smooth'});
+      const menu = document.querySelector('#navMenu');
+      if(menu.classList.contains('show')){
+        document.querySelector('.navbar-toggler').click();
+      }
+    }
+  });
+});
+
+/* ============================================================
+   GLASS CARD — intersection glow-in
+   ============================================================ */
+(function(){
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  },{threshold:0.1});
+  document.querySelectorAll('.glass-card').forEach(c=>{
+    c.style.opacity = '0';
+    c.style.transform = 'translateY(20px)';
+    c.style.transition = 'opacity 0.6s ease, transform 0.6s ease, border-color 0.3s, box-shadow 0.3s';
+    obs.observe(c);
+  });
+})();
+</script>
+</body>
+</html>
