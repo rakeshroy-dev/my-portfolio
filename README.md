@@ -1,7 +1,9 @@
 # 🚀 Rakesh Roy — Portfolio Website
 
-**Premium Python Backend Engineer Portfolio**  
-Futuristic, interactive, single-file HTML/CSS/JS portfolio.
+**Python/Django Backend Engineer Portfolio**
+A single-file, dependency-free (besides fonts/icons via CDN) portfolio with a dark/light theme, a live interactive terminal, an animated skills radar, and a one-click résumé download.
+
+🔗 **Live site:** https://rakeshroy-dev.github.io/ <!-- update to your actual GitHub Pages URL -->
 
 ---
 
@@ -9,11 +11,12 @@ Futuristic, interactive, single-file HTML/CSS/JS portfolio.
 
 ```
 portfolio/
-├── index.html          ← Complete portfolio (all-in-one)
-└── README.md           ← This file
+├── index.html     ← Entire site — markup, CSS, and JS in one file
+├── resume.pdf     ← Résumé served for the "Resume" download button
+└── README.md      ← This file
 ```
 
-> Everything is self-contained in `index.html` — no build step needed.
+> No build step, no framework, no `node_modules`. Everything renders straight from `index.html`.
 
 ---
 
@@ -21,133 +24,110 @@ portfolio/
 
 | Feature | Details |
 |---|---|
-| 🖥️ **Boot Loader** | Animated terminal boot sequence on first load |
-| ⌨️ **Typed.js effect** | Rotating role titles with cursor animation |
-| 🎨 **Custom cursor** | Dot + ring cursor with hover expansion |
-| 🌌 **Canvas background** | Animated particle network with grid overlay |
-| 🃏 **VanillaTilt** | 3D hover tilt on project & service cards |
-| 🖱️ **Glow trail** | Mouse-follow glow dot trail |
-| 📜 **AOS animations** | Scroll-triggered fade/slide-in on all sections |
-| 💻 **Live Terminal** | Interactive fake terminal with 7+ commands |
-| 📊 **Animated counters** | Stats count up when scrolled into view |
-| 📱 **Fully responsive** | Mobile-first, Bootstrap 5 layout |
-| 🔝 **Scroll to top** | Fixed button appears after 400px scroll |
-| 🎯 **Active nav** | Highlights current section in navbar |
+| 🌗 **Dark / light theme** | Toggle in the navbar, persisted via `data-theme` on `<html>` |
+| ⌨️ **Typed role rotator** | Cycles through role titles in the hero |
+| 💻 **Live Terminal** | Interactive fake shell — `whoami`, `skills`, `projects`, `experience`, `contact`, `stats`, `clear` |
+| 📡 **Skills radar (SVG)** | Hand-drawn proficiency radar chart, generated at runtime |
+| 📊 **Animated stat counters** | Experience is calculated *live* from a start date, not hardcoded |
+| 📄 **Résumé download** | Fetches `resume.pdf` and re-saves it locally with a dynamic, date-stamped filename — see below |
+| ✉️ **Contact form** | Wired to EmailJS (free tier) — no backend required |
+| 📱 **Fully responsive** | Custom mobile bottom nav + full-screen mobile menu, no Bootstrap |
+| 🎯 **Scroll-based active nav** | Highlights the current section as you scroll |
 
 ---
 
-## 🌐 Deployment Options
+## 📄 Résumé Download — Dynamic Filename
 
-### Option 1 — GitHub Pages (Free, Recommended)
+The **Resume** button (in the navbar, mobile menu, and hero) fetches `resume.pdf` from the repo root and re-saves it in the visitor's browser with a professional, date-stamped filename:
+
+```
+Rakesh_Roy_Python_Developer_DD_MM_YYYY.pdf
+```
+
+The date is generated from the visitor's local clock at click time (`new Date()`), so it always reflects **today's date** — no manual updates needed. The logic lives near the bottom of `index.html`, inside `downloadResume()`.
+
+**To update your résumé:**
+1. Replace `resume.pdf` in the repo root with your latest CV (keep the filename `resume.pdf`).
+2. Commit & push — the download button automatically serves the new file with the current date.
+
+If `resume.pdf` fails to fetch (e.g. blocked by CORS on some non–GitHub-Pages hosts), the button falls back to a plain `<a download>` link so the file still downloads, just without the JS-driven rename on a few older browsers.
+
+---
+
+## 🌐 Deployment — GitHub Pages (already live)
+
+This repo is already deployed on GitHub Pages. To redeploy after edits:
 
 ```bash
-# 1. Create a new GitHub repo named: rakeshroy.github.io
-#    (or any repo name — use Settings > Pages to deploy)
+git add index.html resume.pdf README.md
+git commit -m "Update portfolio content"
+git push origin main
+```
 
-# 2. Clone and add file
-git init my-portfolio
-cd my-portfolio
-cp /path/to/index.html .
-cp /path/to/README.md .
+GitHub Pages rebuilds automatically from the branch/folder configured under
+**Repo → Settings → Pages → Build and deployment**. No build step is needed since `index.html` is static.
 
-# 3. Push to GitHub
+If you're setting this up fresh:
+
+```bash
+git init
 git add .
-git commit -m "🚀 Initial portfolio deploy"
+git commit -m "Initial portfolio deploy"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 git push -u origin main
-
-# 4. Enable GitHub Pages
-#    Go to: Repo → Settings → Pages → Source: Deploy from branch → main / root
-#    Your site will be live at: https://YOUR_USERNAME.github.io/YOUR_REPO/
 ```
 
----
+Then enable Pages: **Settings → Pages → Source: Deploy from a branch → `main` / `root`**.
+Your site goes live at `https://YOUR_USERNAME.github.io/YOUR_REPO/` (or `https://YOUR_USERNAME.github.io/` if the repo is named `YOUR_USERNAME.github.io`).
 
-### Option 2 — Netlify (Drag & Drop — Fastest)
-
-1. Go to [https://app.netlify.com/drop](https://app.netlify.com/drop)
-2. Drag and drop the **portfolio folder** (containing `index.html`)
-3. Your site is instantly live with a `*.netlify.app` URL
-4. Optionally connect a custom domain
-
----
-
-### Option 3 — Vercel
-
-```bash
-npm install -g vercel
-cd portfolio/
-vercel
-# Follow prompts → site is live in 30 seconds
-```
-
----
-
-### Option 4 — Traditional Hosting (cPanel / VPS)
-
-```bash
-# Upload index.html to your public_html or www folder via FTP/SFTP
-# No server-side setup needed — pure static HTML
-```
+> ⚠️ `resume.pdf` must sit in the **same folder** as `index.html` on Pages (repo root, unless you're serving from `/docs`) or the download button won't find it.
 
 ---
 
 ## ⚙️ Customization Guide
 
-### Update Contact Info
-Search for these in `index.html` and replace:
+### Update contact info
+Search `index.html` for these and replace:
 ```
 rakeshroy.dev@gmail.com   → your email
-+91-8919736316            → your phone
++91-8919736316 / 918919736316 → your phone / WhatsApp number
 rakeshroy-dev             → your LinkedIn handle
-918919736316              → your WhatsApp number (no +)
 ```
 
-### Change Colors
-Edit CSS variables at the top of `<style>`:
-```css
---py-blue:    #38BDF8;   /* Primary accent */
---py-violet:  #8B5CF6;   /* Secondary accent */
---py-cyan:    #22D3EE;   /* Highlight */
---py-emerald: #10B981;   /* Success / live indicator */
+### Update the "live" experience counter
+The years-of-experience shown across the hero, stats, and mini-stats are calculated automatically from a single start date — search for:
+```js
+const start = new Date(2021, 6, 1); // July 1 2021
+```
+Change this if your first full-time start date changes; every counter on the page updates from this one value.
+
+### Contact form (EmailJS)
+Update your own keys near the bottom of `index.html`:
+```js
+const EJS_CONFIG = {
+  publicKey  : 'YOUR_PUBLIC_KEY',
+  serviceId  : 'YOUR_SERVICE_ID',
+  templateId : 'YOUR_TEMPLATE_ID',
+};
 ```
 
-### Add/Remove Sections
-Each section has a clear `<!-- ===== SECTION NAME ===== -->` comment.
-Sections are ordered: Hero → About → Skills → Experience → Projects → Terminal → Services → Stats → Contact → Footer.
+### Change theme colors
+CSS custom properties live at the top of `<style>` under `[data-theme="dark"]` and `[data-theme="light"]` — edit `--blue`, `--teal`, `--indigo`, etc.
 
-### Add a Resume PDF Download
-1. Place your resume as `resume.pdf` in the same folder
-2. Find the **Hire Me** button in the hero and add a download link:
-```html
-<a href="resume.pdf" download class="btn-outline-glow">
-  <i class="fa-solid fa-download"></i> Download CV
-</a>
-```
-
----
-
-## 📱 Mobile Performance Tips
-
-- Particle count auto-scales by screen size (`Math.min(120, W*H/12000)`)
-- Tech badge floaters are hidden below 992px
-- VanillaTilt 3D effect gracefully degrades on touch devices
-- Canvas background is `position:fixed` — GPU composited
-- AOS animations use `will-change: transform, opacity`
+### Add / remove sections
+Each section is wrapped in a clear `<!-- SECTION NAME -->` comment. Current order: Nav → Hero → About → Skills → Experience → Projects → Terminal → Services → Contact → Footer.
 
 ---
 
 ## 🔍 SEO Checklist
 
-- [x] `<title>` tag set
-- [x] `<meta name="description">` set
-- [x] `<meta name="keywords">` set
-- [x] OpenGraph `og:title` and `og:description` set
+- [x] `<title>` and `<meta name="description">` set
+- [x] OpenGraph `og:title` / `og:description` set
 - [x] Semantic HTML5 (`<section>`, `<nav>`, `<footer>`)
-- [ ] Add `<meta property="og:image">` with a screenshot of your portfolio
-- [ ] Add `<link rel="canonical" href="https://yourdomain.com">`
-- [ ] Submit to Google Search Console after deploy
+- [ ] Add `<meta property="og:image">` with a screenshot of the site
+- [ ] Add `<link rel="canonical" href="https://your-domain/">`
+- [ ] Submit sitemap / URL to Google Search Console after deploy
 
 ---
 
@@ -156,14 +136,11 @@ Sections are ordered: Hero → About → Skills → Experience → Projects → 
 | Technology | Purpose |
 |---|---|
 | HTML5 | Semantic structure |
-| CSS3 | All styling, animations, glassmorphism |
-| Bootstrap 5.3 | Responsive grid + navbar |
-| JavaScript (Vanilla) | All interactivity |
-| AOS 2.3 | Scroll-triggered animations |
-| VanillaTilt 1.8 | 3D card hover effects |
-| Font Awesome 6.5 | Icons |
-| Google Fonts | Sora + JetBrains Mono + Outfit |
-| HTML Canvas API | Particle network background |
+| CSS3 (custom, no framework) | Theming, layout, animations, glassmorphism |
+| Vanilla JavaScript | Terminal, theme toggle, nav, counters, radar SVG, resume download |
+| Font Awesome 6.5 | Icons (via CDN) |
+| Google Fonts | Instrument Serif · DM Sans · JetBrains Mono |
+| EmailJS | Contact form delivery (no backend) |
 
 ---
 
@@ -173,4 +150,4 @@ Personal portfolio — all rights reserved by **Rakesh Roy**.
 
 ---
 
-*Built with precision. Powered by Python.* 🐍
+*Built with precision. Powered by Python & Django.* 🐍
