@@ -216,7 +216,7 @@ nav#navbar.sc{padding:.6rem 0}
 .hbg.open span:nth-child(1){transform:translateY(5.5px) rotate(45deg);background:var(--blue)}
 .hbg.open span:nth-child(2){transform:scaleX(0);opacity:0}
 .hbg.open span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg);background:var(--blue)}
-@media(max-width:768px){.nav-links{display:none}.hbg{display:flex}}
+@media(max-width:1024px){.nav-links{display:none}.hbg{display:flex}}
 
 /* ═══ FULL-SCREEN MOBILE MENU ═══ */
 .mob-menu{
@@ -451,16 +451,8 @@ nav#navbar.sc{padding:.6rem 0}
   .btn{padding:.72rem 1.15rem;font-size:.86rem}
   .sl{width:40px;height:40px}
 
-  /* Hero mini stats bar */
-  .hmini-stats{
-    display:grid;grid-template-columns:repeat(4,1fr);
-    gap:.4rem;margin-top:1.5rem;padding:.85rem;
-    border-radius:14px;background:var(--sur);border:1px solid var(--bdr);
-  }
-  .hms{text-align:center}
-  .hms-v{font-family:var(--f-mono);font-size:.82rem;font-weight:600;color:var(--blu-l);line-height:1}
-  [data-theme="light"] .hms-v{color:var(--blu-d)}
-  .hms-k{font-size:.55rem;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-top:.18rem}
+  /* Hero mini stats bar — sizing tweak for phones (base styling now lives outside this block, see .hmini-stats near .hgrid, so it also applies on tablets 769–900px) */
+  .hmini-stats{gap:.4rem;margin-top:1.5rem;padding:.85rem}
 
   /* Card rounding — app feel */
   .card{border-radius:16px}
@@ -967,8 +959,16 @@ footer{background:var(--bg2);border-top:1px solid var(--bdr);padding:1.75rem 0}
 [data-theme="light"] .display em{text-decoration-color:rgba(37,99,235,.25)}
 
 /* Hide mobile-only elements on desktop */
-.hmini-stats{display:none}
+.hmini-stats{
+  display:none;grid-template-columns:repeat(4,1fr);
+  gap:.6rem;margin-top:1.75rem;padding:1rem;
+  border-radius:14px;background:var(--sur);border:1px solid var(--bdr);
+}
 @media(max-width:900px){.hmini-stats{display:grid}}
+.hms{text-align:center}
+.hms-v{font-family:var(--f-mono);font-size:.9rem;font-weight:600;color:var(--blu-l);line-height:1}
+[data-theme="light"] .hms-v{color:var(--blu-d)}
+.hms-k{font-size:.6rem;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-top:.2rem}
 
 /* ── Bento strong hover ── */
 .card.card-flat:hover{transform:translateY(-4px);box-shadow:var(--sh-lg),var(--glow)}
