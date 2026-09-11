@@ -3,7 +3,7 @@
 **Python/Django Backend Engineer Portfolio**
 A single-file, dependency-free (besides fonts/icons via CDN) portfolio with a dark/light theme, a live interactive terminal, an animated skills radar, and a one-click résumé download.
 
-🔗 **Live site:** https://rakeshroy-dev.github.io/ <!-- update to your actual GitHub Pages URL -->
+🔗 **Live site:** [https://rakeshroy-dev.github.io/my-portfolio](https://rakeshroy-dev.github.io/my-portfolio/) <!-- update to your actual GitHub Pages URL -->
 
 ---
 
